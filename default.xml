@@ -6,4 +6,5 @@
 	<project path="scripts" name="zero-mcu/scripts" revision="master" />
 	<project path="toolchain" name="zero-mcu/toolchain" revision="master" />
 	<project path="zero-lib" name="zero-mcu/zero-lib" revision="master" />
+	<project path="3rd-party/STM32Cube_FW_F1_V1.7.0" name="zero-3rd/STM32Cube_FW_F1_V1.7.0" revision="master">
 </manifest>
