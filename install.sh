@@ -52,5 +52,4 @@ cd $ZERO_SDK_HOME
 repo init -u https://github.com/zero-mcu/manifest.git \
           --repo-url=https://github.com/ArnoYuan/git-repo.git
 
-
 repo sync
