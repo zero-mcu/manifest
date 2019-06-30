@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-	<remote  name="orgin" fetch="https://github.com/" />
+	<remote  name="orgin" fetch="/home/arno/Development/workspace/demo/repos/" />
 	<default revision="master" remote="orgin" sync-j="4" />
-	<project path="examples" name="zero-mcu/examples.git" revision="master" />
-	<project path="zero-lib" name="zero-mcu/zero-lib.git" revision="master" />
+	<project path="examples" name="examples" revision="master" />
+	<project path="scripts" name="scripts" revision="master" />
 </manifest>
