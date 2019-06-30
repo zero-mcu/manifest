@@ -2,7 +2,7 @@
 
 PROJECT_PATH=~/Development/workspace
 ZERO_SDK_NAME=zero-mcu
-ZERO_SDK_HOME=$PROJECT_PATH/$ZERO_SDK_NAME
+ZERO_MCU_HOME=$PROJECT_PATH/$ZERO_SDK_NAME
 BACKUP_PATH=~/bakcup
 BASHRC_PATH=~/
 debug_flag="off"
@@ -38,16 +38,16 @@ echo "install zero-mcu version: $VERSION ..."
 
 SyncRepo()
 {
-    if [ ! -d $ZERO_SDK_HOME ]; then
-        echo "create $ZERO_SDK_HOME"
-        mkdir $ZERO_SDK_HOME
+    if [ ! -d $ZERO_MCU_HOME ]; then
+        echo "create $ZERO_MCU_HOME"
+        mkdir $ZERO_MCU_HOME
     else
-        echo "$ZERO_SDK_HOME already exists, clean the folder first."
-        rm -rf $ZERO_SDK_HOME/*
-        rm -rf $ZERO_SDK_HOME/.repo
+        echo "$ZERO_MCU_HOME already exists, clean the folder first."
+        rm -rf $ZERO_MCU_HOME/*
+        rm -rf $ZERO_MCU_HOME/.repo
     fi
 
-    cd $ZERO_SDK_HOME
+    cd $ZERO_MCU_HOME
 
     repo init -u https://github.com/zero-mcu/manifest.git \
             --repo-url=https://github.com/ArnoYuan/git-repo.git
@@ -70,7 +70,7 @@ GenerateEnv()
         cp $BASHRC_PATH/.bashrc $BACKUP_PATH/ >/dev/null 2>&1
         mv $BASHRC_PATH/.bashrc $BASHRC_PATH/.bashrc.bak > /dev/null 2>&1
 
-        sed -i 's/export ZERO_SDK_HOME=.*//g' $BACKUP_PATH/.bashrc
+        sed -i 's/export ZERO_MCU_HOME=.*//g' $BACKUP_PATH/.bashrc
         # remove last '\n'
         line=`sed -n '$=' $BACKUP_PATH/.bashrc`
         line=`expr $line - 1`
@@ -80,7 +80,7 @@ GenerateEnv()
         sed -i $line'{N;s/^\n//}' $BACKUP_PATH/.bashrc
 
         echo >>$BACKUP_PATH/.bashrc
-        echo "export ZERO_SDK_HOME=$ZERO_SDK_HOME/" >> $BACKUP_PATH/.bashrc
+        echo "export ZERO_MCU_HOME=$ZERO_MCU_HOME/" >> $BACKUP_PATH/.bashrc
         echo >>$BACKUP_PATH/.bashrc
         mv $BACKUP_PATH/.bashrc $BASHRC_PATH/
     fi
