@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-	<remote  name="orgin" fetch="/home/arno/Development/workspace/demo/repos/" />
+	<remote  name="orgin" fetch="https://github.com/zero-mcu/" />
 	<default revision="master" remote="orgin" sync-j="4" />
-	<project path="examples" name="examples" revision="master" />
-	<project path="scripts" name="scripts" revision="master" />
+	<project path="examples" name="zero-mcu/examples" revision="master" />
+	<project path="scripts" name="zero-mcu/scripts" revision="master" />
+	<project path="toolchain" name="zero-mcu/toolchain" revision="master" />
+	<project path="zero-lib" name="zero-mcu/zero-lib" revision="master" />
 </manifest>
