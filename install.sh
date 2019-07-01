@@ -40,7 +40,7 @@ SyncRepo()
 {
     if [ ! -d $ZERO_MCU_HOME ]; then
         echo "create $ZERO_MCU_HOME"
-        mkdir $ZERO_MCU_HOME
+        mkdir -p $ZERO_MCU_HOME
     else
         echo "$ZERO_MCU_HOME already exists, clean the folder first."
         rm -rf $ZERO_MCU_HOME/*
