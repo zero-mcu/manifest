@@ -1,40 +1,53 @@
 #!/bin/sh
 
-PROJECT_PATH=~/Development/workspace
+INSTALL_PATH=~/Development/workspace
 ZERO_SDK_NAME=zero-mcu
-ZERO_MCU_HOME=$PROJECT_PATH/$ZERO_SDK_NAME
+
 BACKUP_PATH=~/bakcup
 BASHRC_PATH=~/
-debug_flag="off"
 
+repo_just_sync="nosync"
 
 Usage()
 {
 cat <<EOF
-$0 [VERSION] [DEBUG]
-    VERSION: A.B
-    DEBUG: 'on'/'off'
+$0 [--install install_path] [--version version]
+    install_path: install code to the path.
+    version: zero mcu SDK version.
 
 example:
-    $0 0.1
+    $0 --install ~/demo --version 0.1
 EOF
 exit 0
 }
 
 VERSION=0.1
 
-if [ $# -eq 1 ]; then
-    if [ $1 = "?" ] || [ $1 = "-h" ]; then
-        Usage
-    fi
-elif [ $# -gt 1 ]; then
-    if [ $2 == "on" ]; then
-        debug_flag="on"
-    fi
-    VERSION=$1
+if [ $1 = "-h" ] || [ $1 = "?" ] || [ $1 = "--help" ]; then
+    Usage
 fi
 
-echo "install zero-mcu version: $VERSION ..."
+param_type="none"
+for arg in $*
+do
+    if [ $arg = '--install' ]; then
+        param_type="install"
+    elif [ $arg = '--version' ]; then
+        param_type="version"
+    else
+        if [ $param_type = "install" ]; then
+            INSTALL_PATH=$arg
+        elif [ $param_type = "version" ]; then
+            VERSION=$arg
+        fi
+        param_type="none"
+    fi
+done
+
+ZERO_MCU_HOME=$INSTALL_PATH/$ZERO_SDK_NAME
+
+echo "install zero-mcu to $INSTALL"
+echo "version: $VERSION"
 
 SyncRepo()
 {
