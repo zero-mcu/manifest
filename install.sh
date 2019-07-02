@@ -1,40 +1,60 @@
-#!/bin/sh
+#!/bin/bash
 
-PROJECT_PATH=~/Development/workspace
+INSTALL_PATH=~/Development/workspace
 ZERO_SDK_NAME=zero-mcu
-ZERO_MCU_HOME=$PROJECT_PATH/$ZERO_SDK_NAME
-BACKUP_PATH=~/bakcup
-BASHRC_PATH=~/
-debug_flag="off"
 
+BACKUP_PATH=$HOME/bakcup
+PROFILE_PATH=$HOME
+PROFILE_NAME=.profile
+
+sync_type="none"
 
 Usage()
 {
 cat <<EOF
-$0 [VERSION] [DEBUG]
-    VERSION: A.B
-    DEBUG: 'on'/'off'
-
+$0 [name] [--install install_path] [--version version]
+    name: project name.
+    install_path: install code to the path.
+    version: zero mcu SDK version.
 example:
-    $0 0.1
+    $0 zero-mcu --install ~/demo --version 0.1
 EOF
 exit 0
 }
 
 VERSION=0.1
 
-if [ $# -eq 1 ]; then
-    if [ $1 = "?" ] || [ $1 = "-h" ]; then
-        Usage
-    fi
-elif [ $# -gt 1 ]; then
-    if [ $2 == "on" ]; then
-        debug_flag="on"
-    fi
-    VERSION=$1
+if [ $1 = "-h" ] || [ $1 = "?" ] || [ $1 = "--help" ]; then
+    Usage
 fi
 
-echo "install zero-mcu version: $VERSION ..."
+if [ $# -ge 1 ]; then
+    if [ $1 != '--install' ] && [ $1 != '--version' ]; then
+        ZERO_SDK_NAME=$1
+    fi
+fi
+
+param_type="none"
+for arg in $*
+do
+    if [ $arg = '--install' ]; then
+        param_type="install"
+    elif [ $arg = '--version' ]; then
+        param_type="version"
+    else
+        if [ $param_type = "install" ]; then
+            INSTALL_PATH=$arg
+        elif [ $param_type = "version" ]; then
+            VERSION=$arg
+        fi
+        param_type="none"
+    fi
+done
+
+ZERO_MCU_HOME=$INSTALL_PATH/$ZERO_SDK_NAME
+
+echo "install zero-mcu to $INSTALL_PATH"
+echo "version: $VERSION"
 
 SyncRepo()
 {
@@ -55,36 +75,33 @@ SyncRepo()
     repo sync
 }
 
-SyncRepo
-
 GenerateEnv()
 {
-    if [ -f $BACKUP_PATH/.bashrc ]; then
+    if [ -f $BACKUP_PATH/$PROFILE_NAME ]; then
         echo "Environment variable has already been generated, Please check /etc/profile.bak\
-        or $BACKUP_PATH/.bashrc.bak, maybe has exist!"
+        or $BACKUP_PATH/$PROFILE_NAME.bak, maybe has exist!"
         exit 1
     else
         if [ ! -d $BACKUP_PATH ]; then
             mkdir -p $BACKUP_PATH
         fi
-        cp $BASHRC_PATH/.bashrc $BACKUP_PATH/ >/dev/null 2>&1
-        mv $BASHRC_PATH/.bashrc $BASHRC_PATH/.bashrc.bak > /dev/null 2>&1
+        cp $PROFILE_PATH/$PROFILE_NAME $BACKUP_PATH/ >/dev/null 2>&1
+        mv $PROFILE_PATH/$PROFILE_NAME $PROFILE_PATH/$PROFILE_NAME.bak > /dev/null 2>&1
 
-        sed -i 's/export ZERO_MCU_HOME=.*//g' $BACKUP_PATH/.bashrc
+        sed -i 's/export ZERO_MCU_HOME=.*//g' $BACKUP_PATH/$PROFILE_NAME
         # remove last '\n'
-        line=`sed -n '$=' $BACKUP_PATH/.bashrc`
+        line=`sed -n '$=' $BACKUP_PATH/$PROFILE_NAME`
         line=`expr $line - 1`
-        sed -i $line'{N;s/^\n//}' $BACKUP_PATH/.bashrc
-        line=`sed -n '$=' $BACKUP_PATH/.bashrc`
+        sed -i $line'{N;s/^\n//}' $BACKUP_PATH/$PROFILE_NAME
+        line=`sed -n '$=' $BACKUP_PATH/$PROFILE_NAME`
         line=`expr $line - 1`
-        sed -i $line'{N;s/^\n//}' $BACKUP_PATH/.bashrc
+        sed -i $line'{N;s/^\n//}' $BACKUP_PATH/$PROFILE_NAME
 
-        echo >>$BACKUP_PATH/.bashrc
-        echo "export ZERO_MCU_HOME=$ZERO_MCU_HOME/" >> $BACKUP_PATH/.bashrc
-        echo >>$BACKUP_PATH/.bashrc
-        mv $BACKUP_PATH/.bashrc $BASHRC_PATH/
+        echo >>$BACKUP_PATH/$PROFILE_NAME
+        echo "export ZERO_MCU_HOME=$ZERO_MCU_HOME" >> $BACKUP_PATH/$PROFILE_NAME
+        mv $BACKUP_PATH/$PROFILE_NAME $PROFILE_PATH/
     fi
 }
 
 GenerateEnv
-
+SyncRepo
